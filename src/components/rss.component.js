@@ -5,15 +5,12 @@ export class RssComponent extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            url: 'http://rss.home.uol.com.br/index.xml',
-        };
+        this.state = {};
     }
 
     componentDidMount(){
         const parser = new Parser();
-        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-        parser.parseURL(CORS_PROXY + this.state.url).then(feed => {
+        parser.parseURL(this.props.url).then(feed => {
             this.setState({ feed });
         });
     }
@@ -23,7 +20,7 @@ export class RssComponent extends React.Component {
             const items = [];
             for (const item of this.state.feed.items) {
                 items.push(
-                    <li>
+                    <li key={item.guid}>
                         <a target='_blank' href={item.link}>{item.title}</a>                        
                     </li>
                 )
