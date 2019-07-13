@@ -2,30 +2,24 @@ import React from 'react';
 import './App.css';
 import { IframeComponent } from './components/iframe.component';
 import { RssComponent } from './components/rss.component';
-import { getItems } from './localStorage/localStorage';
 import { IFRAME, RSS, CUSTOM } from './localStorage/enum';
 import { CustomComponent } from './components/custom.component';
+import { getConfig } from './localStorage/localStorage';
 
 export class App extends React.Component {
 
     constructor(props){
       super(props);
       this.state = {
-        iframes: [],
-        rss: [],
-        custom: [],
+        config: {},
       };
     }
 
     componentDidMount() {
-      const iframes = getItems(IFRAME);
-      const rss = getItems(RSS);
-      const custom = getItems(CUSTOM);
+      const config = getConfig();
   
       this.setState({
-        iframes,
-        rss,
-        custom,
+        config,
       });
     }
 
@@ -34,26 +28,26 @@ export class App extends React.Component {
       const rss = [];
       const custom = [];
 
-      if (this.state.iframes && this.state.iframes.length) {
-        for (const item of this.state.iframes) {
+      if (this.state.config[IFRAME] && this.state.config[IFRAME].length) {
+        for (const item of this.state.config[IFRAME]) {
           iframes.push(
-            <IframeComponent url={item} key={item}></IframeComponent>
+            <IframeComponent url={item.value} key={item.value}></IframeComponent>
           );
         }
       }
 
-      if (this.state.rss && this.state.rss.length) {
-        for (const item of this.state.rss) {
+      if (this.state.config[RSS] && this.state.config[RSS].length) {
+        for (const item of this.state.config[RSS]) {
           rss.push(
-            <RssComponent url={item} key={item}></RssComponent>
+            <RssComponent url={item.value} key={item.value}></RssComponent>
           );
         }
       }
 
-      if (this.state.custom && this.state.custom) {
-        for (const item of this.state.custom) {
+      if (this.state.config[CUSTOM] && this.state.config[CUSTOM].length) {
+        for (const item of this.state.config[CUSTOM]) {
           custom.push(
-            <CustomComponent custom={item} key={item}></CustomComponent>
+            <CustomComponent custom={item.value} key={item.value}></CustomComponent>
           );
         }
       }

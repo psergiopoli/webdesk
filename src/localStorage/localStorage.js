@@ -1,44 +1,44 @@
-import { IFRAME, RSS, CUSTOM } from "./enum";
+import { RSS, IFRAME, CUSTOM, APP_CONFIG } from "./enum";
+
+const defaultConfig = {
+    [RSS]: [{
+        value: 'https://cors-anywhere.herokuapp.com/http://rss.home.uol.com.br/index.xml',
+    }],
+    [IFRAME]: [{
+        value: 'https://player.twitch.tv/?channel=warcraft&muted=true'
+    }],
+    [CUSTOM]: [{
+        value: '<h2 class="title">CUSTOM FROM LOCAL STORAGE</h2>',
+    }]
+};
 
 export const clearItems = () => {
-    localStorage.clear(IFRAME);
-    localStorage.clear(RSS);
-    localStorage.clear(CUSTOM);
+    localStorage.clear(APP_CONFIG);
 }
 
-export const addItem = (type, item) => {
-    const stringItems = localStorage.getItem(type);
-    let items = JSON.parse(stringItems);
-    if (items && Array.isArray(items)) {
-        items.push(item);
-    } else {
-        items = [];
-    }
-
-    localStorage.setItem(type, JSON.stringify(items));
+export const addItem = (type, value) => {
+    const configuration = getConfig();
+    configuration[type].push({
+        value,
+    });
+    localStorage.setItem(APP_CONFIG, JSON.stringify(configuration));
     return;
 }
 
- export const getItems = (type) => {
-    const stringItems = localStorage.getItem(type);
-    if (stringItems) {
-        const items = JSON.parse(stringItems);
-        if (items && Array.isArray(items) && items.length) {
-            return items;
-        }    
+ export const getConfig = () => {
+    const stringConfig = localStorage.getItem(APP_CONFIG);
+    let configuration;
+
+    try {
+        configuration = JSON.parse(stringConfig);
+    } catch (err) {
+        console.log(err);
+        console.log('Error on loading configuration, loading default config');
     }
 
-    if (type === IFRAME) {
-        addItem(type, 'https://player.twitch.tv/?channel=warcraft&muted=true');
+    if (!configuration) {
+        configuration = defaultConfig;
     }
 
-    if (type === RSS) {
-        addItem(type, 'https://cors-anywhere.herokuapp.com/http://rss.home.uol.com.br/index.xml');
-    }
-
-    if (type === CUSTOM) {
-        addItem(type, '<h2 class="title">CUSTOM FROM LOCAL STORAGE</h2>')
-    }
-
-    return getItems(type);
+    return configuration;
 }
