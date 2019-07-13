@@ -5,7 +5,7 @@ const defaultConfig = {
         value: 'https://cors-anywhere.herokuapp.com/http://rss.home.uol.com.br/index.xml',
     }],
     [IFRAME]: [{
-        value: 'https://player.twitch.tv/?channel=warcraft&muted=true'
+        value: 'https://player.twitch.tv/?channel=twitch&muted=true'
     }],
     [CUSTOM]: [{
         value: '<h2 class="title">CUSTOM FROM LOCAL STORAGE</h2>',
